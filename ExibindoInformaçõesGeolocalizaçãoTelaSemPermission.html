@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exibindo Informações de Geolocalização</title>
+</head>
+<body>
+  <h1>Sua Localização</h1>
+  <p>Latitude: <span id="latitude"></span></p>
+  <p>Longitude: <span id="longitude"></span></p>
+
+  <script>
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        document.getElementById("latitude").textContent = latitude.toFixed(4); // Limita a precisão da latitude para 4 casas decimais
+        document.getElementById("longitude").textContent = longitude.toFixed(4); // Limita a precisão da longitude para 4 casas decimais
+      }, function(error) {
+        // Tratar o erro de geolocalização
+        if (error.code === error.PERMISSION_DENIED) {
+          console.log("Permissão de geolocalização negada.");
+        } else {
+          console.log("Erro de geolocalização:", error.message);
+        }
+      }, {
+        enableHighAccuracy: false, // Desativa a precisão alta e evita o popup
+        timeout: 5000 // Tempo limite para obter a geolocalização (em milissegundos)
+      });
+    } else {
+      /* a geolocalização NÃO está disponível */
+      console.log("Geolocalização não está disponível.");
+    }
+  </script>
+</body>
+</html>
