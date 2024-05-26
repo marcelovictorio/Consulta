@@ -1,0 +1,9 @@
+if ("geolocation" in navigator) {
+  /* a geolocalização está disponível */
+  navigator.geolocation.getCurrentPosition(function(position) {
+    console.log(position.coords.latitude, position.coords.longitude);
+  });
+} else {
+  /* a geolocalização NÃO está disponível */
+  console.log("Geolocalização não está disponível.");
+}
