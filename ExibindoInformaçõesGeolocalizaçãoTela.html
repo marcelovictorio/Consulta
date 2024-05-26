@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exibindo Informações de Geolocalização</title>
+</head>
+<body>
+  <h1>Sua Localização</h1>
+  <p>Latitude: <span id="latitude"></span></p>
+  <p>Longitude: <span id="longitude"></span></p>
+
+  <script>
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        document.getElementById("latitude").textContent = latitude;
+        document.getElementById("longitude").textContent = longitude;
+      });
+    } else {
+      console.log("Geolocalização não está disponível.");
+    }
+  </script>
+</body>
+</html>
