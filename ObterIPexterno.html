@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Obter IP</title>
+  <title>Obter e Alterar IP</title>
   <style>
     body {
       font-size: 20px; /* Ajusta o tamanho da fonte */
       font-family: Arial, sans-serif;
     }
-    #ip-externo, #ip-interno {
+    #ip-externo, #ip-interno, #novo-ip {
       margin: 10px 0;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
       background-color: #f9f9f9;
     }
+    form {
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
-  <h1>Obtenção de IP</h1>
+  <h1>Obtenção e Alteração de IP</h1>
   <p id="ip-externo">IP Externo: Carregando...</p>
   <p id="ip-interno">IP Interno: Carregando...</p>
+
+  <form id="alterar-ip-form">
+    <label for="novo-ip-input">Novo IP:</label>
+    <input type="text" id="novo-ip-input" placeholder="Digite o novo IP">
+    <button type="submit">Alterar IP</button>
+  </form>
+
+  <p id="novo-ip">Novo IP: Nenhum</p>
 
   <script>
     // Obter o IP externo usando uma API externa (nem sempre confiável)
@@ -76,6 +87,17 @@
       console.error('RTCPeerConnection não disponível');
       document.getElementById('ip-interno').textContent = 'RTCPeerConnection não disponível';
     }
+
+    // Simular a alteração do IP
+    document.getElementById('alterar-ip-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const novoIP = document.getElementById('novo-ip-input').value;
+      if (novoIP) {
+        document.getElementById('novo-ip').textContent = 'Novo IP: ' + novoIP;
+      } else {
+        alert('Por favor, insira um IP válido.');
+      }
+    });
   </script>
 </body>
 </html>
