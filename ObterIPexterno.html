@@ -1,45 +1,58 @@
-// Obter o IP externo usando uma API externa (nem sempre confiável)
-fetch('https://api.ipify.org?format=json')
-  .then(response => response.json())
-  .then(data => console.log('IP externo:', data.ip))
-  .catch(error => console.error('Erro ao obter IP externo:', error));
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Obter IP</title>
+</head>
+<body>
+  <h1>Obtenção de IP</h1>
+  <p>Abra o console do navegador para ver os resultados.</p>
 
-// Obter o IP interno (pode não funcionar em todos os navegadores)
-const RTCPeerConnection = window.RTCPeerConnection ||
-  window.mozRTCPeerConnection ||
-  window.webkitRTCPeerConnection;
+  <script>
+    // Obter o IP externo usando uma API externa (nem sempre confiável)
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => console.log('IP externo:', data.ip))
+      .catch(error => console.error('Erro ao obter IP externo:', error));
 
-if (RTCPeerConnection) {
-  const pc = new RTCPeerConnection();
-  pc.onicecandidate = (event) => {
-    if (event.candidate) {
-      const ipRegex = /candidate:\d+ \d+ (\d+\.\d+\.\d+\.\d+)/;
-      const match = event.candidate.candidate.match(ipRegex);
-      if (match) {
-        const internalIP = match[1];
-        console.log('IP interno:', internalIP);
-      }
-    }
-  };
+    // Obter o IP interno (pode não funcionar em todos os navegadores)
+    const RTCPeerConnection = window.RTCPeerConnection ||
+      window.mozRTCPeerConnection ||
+      window.webkitRTCPeerConnection;
 
-  pc.createOffer()
-    .then(sdp => {
-      return pc.setLocalDescription(sdp);
-    })
-    .then(() => {
-      const sdpLines = pc.localDescription.sdp.split('\n');
-      for (const line of sdpLines) {
-        if (line.startsWith('a=candidate:')) {
+    if (RTCPeerConnection) {
+      const pc = new RTCPeerConnection();
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
           const ipRegex = /candidate:\d+ \d+ (\d+\.\d+\.\d+\.\d+)/;
-          const match = line.match(ipRegex);
+          const match = event.candidate.candidate.match(ipRegex);
           if (match) {
             const internalIP = match[1];
             console.log('IP interno:', internalIP);
           }
         }
-      }
-    })
-    .catch(error => console.error('Erro ao obter IP interno:', error));
-} else {
-  console.error('RTCPeerConnection não disponível');
-}
+      };
+
+      pc.createOffer()
+        .then(sdp => {
+          return pc.setLocalDescription(sdp);
+        })
+        .then(() => {
+          const sdpLines = pc.localDescription.sdp.split('\n');
+          for (const line of sdpLines) {
+            if (line.startsWith('a=candidate:')) {
+              const ipRegex = /candidate:\d+ \d+ (\d+\.\d+\.\d+\.\d+)/;
+              const match = line.match(ipRegex);
+              if (match) {
+                const internalIP = match[1];
+                console.log('IP interno:', internalIP);
+              }
+            }
+          }
+        })
+        .catch(error => console.error('Erro ao obter IP interno:', error));
+    } else {
+      console.error('RTCPeerConnection não disponível');
+    }
+  </script>
+</body>
+</html>
