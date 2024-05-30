@@ -2,17 +2,36 @@
 <html>
 <head>
   <title>Obter IP</title>
+  <style>
+    body {
+      font-size: 20px; /* Ajusta o tamanho da fonte */
+      font-family: Arial, sans-serif;
+    }
+    #ip-externo, #ip-interno {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
   <h1>Obtenção de IP</h1>
-  <p>Abra o console do navegador para ver os resultados.</p>
+  <p id="ip-externo">IP Externo: Carregando...</p>
+  <p id="ip-interno">IP Interno: Carregando...</p>
 
   <script>
     // Obter o IP externo usando uma API externa (nem sempre confiável)
     fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
-      .then(data => console.log('IP externo:', data.ip))
-      .catch(error => console.error('Erro ao obter IP externo:', error));
+      .then(data => {
+        document.getElementById('ip-externo').textContent = 'IP Externo: ' + data.ip;
+      })
+      .catch(error => {
+        console.error('Erro ao obter IP externo:', error);
+        document.getElementById('ip-externo').textContent = 'Erro ao obter IP externo';
+      });
 
     // Obter o IP interno (pode não funcionar em todos os navegadores)
     const RTCPeerConnection = window.RTCPeerConnection ||
@@ -27,7 +46,7 @@
           const match = event.candidate.candidate.match(ipRegex);
           if (match) {
             const internalIP = match[1];
-            console.log('IP interno:', internalIP);
+            document.getElementById('ip-interno').textContent = 'IP Interno: ' + internalIP;
           }
         }
       };
@@ -44,14 +63,18 @@
               const match = line.match(ipRegex);
               if (match) {
                 const internalIP = match[1];
-                console.log('IP interno:', internalIP);
+                document.getElementById('ip-interno').textContent = 'IP Interno: ' + internalIP;
               }
             }
           }
         })
-        .catch(error => console.error('Erro ao obter IP interno:', error));
+        .catch(error => {
+          console.error('Erro ao obter IP interno:', error);
+          document.getElementById('ip-interno').textContent = 'Erro ao obter IP interno';
+        });
     } else {
       console.error('RTCPeerConnection não disponível');
+      document.getElementById('ip-interno').textContent = 'RTCPeerConnection não disponível';
     }
   </script>
 </body>
